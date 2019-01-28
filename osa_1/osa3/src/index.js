@@ -4,11 +4,9 @@ import ReactDOM from 'react-dom'
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(Array.apply(null, new Array(anecdotes.length)).map(Number.prototype.valueOf, 0))
-  var randomNumber = Math.floor(Math.random() * anecdotes.length)
   var random = anecdotes[Math.floor(Math.random() * anecdotes.length)]
 
   const addPoint = () => {
-    const copy = { ...points }
     points[selected] += 1
     setPoints(points)
   }
@@ -17,7 +15,8 @@ const App = (props) => {
 
     <div>
       <h1>Anecdote of the day</h1>
-      {anecdotes[selected]}
+      {anecdotes[selected]} 
+      <p>has {points[selected]} points</p>
       <Button random={random} setSelected={setSelected} points={points} />
       <VoteButton addPoint={addPoint} />
       <h1>Anecdote with most votes</h1>
