@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import personService from './services/persons'
 import './index.css'
+import { log } from 'util';
 
 const Rows = ({ persons, filter, setServiceMessage, serviceMessage }) => {
     return (
         persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()) === true).map(person =>
             <li key={person.id}> {person.name} {person.number} <button onClick={() => deletePerson({ person, setServiceMessage, serviceMessage })} > poista </button> </li>)
     )
-
 }
 
 const deletePerson = ({ person, setServiceMessage, serviceMessage }) => {
@@ -80,7 +80,6 @@ const App = () => {
                 id = person.id
             }
         })
-        console.log(persons);
         personService.update(id, nameObject)
             .then(returnedPerson => {
                 setPersons(persons.map(person => person.id !== id ? person : returnedPerson))
@@ -116,7 +115,6 @@ const App = () => {
         const nameObject = {
             name: newName,
             number: newNumber,
-            id: persons.length + 1,
         }
 
         if ((persons.map(person => person.name.toLowerCase())).includes(newName.toLowerCase())) {
@@ -131,6 +129,11 @@ const App = () => {
                     setPersons(persons.concat(returnedPerson))
                     setNewName('')
                     setNewNumber('')
+                })
+                .catch(error => {
+                    setServiceMessage(error.response.data)
+                    Notification({serviceMessage})
+                    console.log(error.response.data)
                 })
             setServiceMessage(`Lisättiin ${nameObject.name}`)
             Notification({ serviceMessage })
